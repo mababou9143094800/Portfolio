@@ -1,4 +1,4 @@
-// ── Contenu du portfolio ────────────────────────────────────────────────
+﻿// ── Contenu du portfolio ────────────────────────────────────────────────
 // Tout le contenu placeholder est centralisé ici : remplace simplement les
 // valeurs par les tiennes.
 
@@ -22,6 +22,7 @@ export const projects = [
     color: '#e74c5b',
     year: '2025',
     stack: ['React', 'Node.js', 'PostgreSQL'],
+    tags: ['Web'],
     description:
       "Plateforme d'apprentissage pour aider les utilisateurs à maîtriser leurs appareils Apple. Cours interactifs, suivi de progression et abonnements.",
     link: 'https://example.com',
@@ -34,6 +35,7 @@ export const projects = [
     color: '#4a90d9',
     year: '2025',
     stack: ['Vue.js', 'API REST', 'Chart.js'],
+    tags: ['Web'],
     description:
       'Application météo minimaliste avec prévisions horaires, cartes interactives et visualisations de données climatiques.',
     link: 'https://example.com',
@@ -46,6 +48,7 @@ export const projects = [
     color: '#8e6fd8',
     year: '2024',
     stack: ['Next.js', 'Prisma', 'tRPC'],
+    tags: ['Web', 'Open source'],
     description:
       'Gestionnaire de tâches collaboratif avec tableaux kanban, temps réel et notifications intelligentes.',
     link: 'https://example.com',
@@ -58,6 +61,7 @@ export const projects = [
     color: '#e8944a',
     year: '2024',
     stack: ['HTML/CSS', 'JavaScript', 'GSAP'],
+    tags: ['Web', 'Open source'],
     description:
       "Galerie d'art génératif : des œuvres uniques créées en direct dans le navigateur avec des algorithmes créatifs.",
     link: 'https://example.com',
@@ -70,6 +74,7 @@ export const projects = [
     color: '#4ab87a',
     year: '2023',
     stack: ['React Native', 'Firebase'],
+    tags: ['Mobile'],
     description:
       'Application mobile de prise de notes pour développeurs avec coloration syntaxique et synchronisation cloud.',
     link: 'https://example.com',

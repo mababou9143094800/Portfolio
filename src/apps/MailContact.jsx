@@ -9,6 +9,13 @@ export default function MailContact() {
   const [subject, setSubject] = useState('')
   const [body, setBody] = useState('')
   const [sent, setSent] = useState(false)
+  const [fontSize, setFontSize] = useState(14)
+  const [toast, setToast] = useState(null)
+
+  const showToast = (msg) => {
+    setToast(msg)
+    setTimeout(() => setToast(null), 2200)
+  }
 
   const send = () => {
     const url = `mailto:${profile.email}?subject=${encodeURIComponent(
@@ -41,10 +48,24 @@ export default function MailContact() {
         </motion.button>
         <span className="mail-toolbar-title">{sent ? 'Ouverture de votre app Mail…' : 'Nouveau message'}</span>
         <div className="mail-toolbar-icons">
-          <span title="Pièce jointe">📎</span>
-          <span title="Police">Aa</span>
+          <button
+            className="mail-tool-btn"
+            title="Pièce jointe"
+            onClick={() => showToast('Les pièces jointes ne sont pas disponibles dans la démo 😉')}
+          >
+            📎
+          </button>
+          <button
+            className="mail-tool-btn"
+            title="Taille du texte"
+            onClick={() => setFontSize((s) => (s >= 18 ? 14 : s + 2))}
+          >
+            Aa
+          </button>
         </div>
       </div>
+
+      {toast && <div className="mail-toast">{toast}</div>}
 
       <div className="mail-fields">
         <div className="mail-field">
@@ -65,6 +86,7 @@ export default function MailContact() {
 
       <textarea
         className="mail-body"
+        style={{ fontSize }}
         value={body}
         onChange={(e) => setBody(e.target.value)}
         placeholder={`Bonjour ${profile.firstName},\n\nJe vous contacte au sujet de…`}

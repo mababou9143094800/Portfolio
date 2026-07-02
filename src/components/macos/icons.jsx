@@ -80,6 +80,64 @@ export function PillarsIcon() {
   )
 }
 
+// ── Corbeille (style Dock : panier translucide, pas de squircle) ─────
+export function TrashIcon({ full = false }) {
+  return (
+    <svg viewBox="0 0 120 120" width="100%" height="100%" style={{ display: 'block' }}>
+      <defs>
+        <linearGradient id="grad-trash" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#e8e8ee" stopOpacity="0.9" />
+          <stop offset="1" stopColor="#9a9aa6" stopOpacity="0.9" />
+        </linearGradient>
+      </defs>
+      {full && (
+        <g>
+          <path d="M46 32 L58 14 L64 30 Z" fill="#d9d9e2" />
+          <circle cx="72" cy="24" r="9" fill="#c9c9d4" />
+          <rect x="38" y="22" width="14" height="12" rx="2" fill="#bfbfcc" transform="rotate(-14 45 28)" />
+        </g>
+      )}
+      <path d="M34 36 L86 36 L80 106 Q79 112 73 112 L47 112 Q41 112 40 106 Z" fill="url(#grad-trash)" opacity="0.92" />
+      <path d="M30 30 L90 30 L88 40 L32 40 Z" fill="#d4d4de" />
+      {/* stries verticales */}
+      {[44, 52, 60, 68, 76].map((xx, i) => (
+        <line key={i} x1={xx} y1="46" x2={xx > 60 ? xx - 2 : xx > 56 ? xx : xx + 2} y2="104" stroke="#7c7c8a" strokeWidth="2" opacity="0.5" />
+      ))}
+    </svg>
+  )
+}
+
+// ── Dossier macOS ────────────────────────────────────────────────────
+export function FolderIcon() {
+  return (
+    <svg viewBox="0 0 120 120" width="100%" height="100%" style={{ display: 'block' }}>
+      <defs>
+        <linearGradient id="grad-folder" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#6cc5f5" />
+          <stop offset="1" stopColor="#3d9be0" />
+        </linearGradient>
+      </defs>
+      <path d="M14 34 Q14 28 20 28 L44 28 L52 38 L100 38 Q106 38 106 44 L106 88 Q106 94 100 94 L20 94 Q14 94 14 88 Z" fill="#2f7fc0" />
+      <path d="M14 44 Q14 40 18 40 L102 40 Q106 40 106 44 L106 88 Q106 94 100 94 L20 94 Q14 94 14 88 Z" fill="url(#grad-folder)" />
+    </svg>
+  )
+}
+
+// ── Fichier PDF (CV) ─────────────────────────────────────────────────
+export function FileIcon() {
+  return (
+    <svg viewBox="0 0 120 120" width="100%" height="100%" style={{ display: 'block' }}>
+      <path d="M30 12 L74 12 L94 32 L94 108 L30 108 Z" fill="#f5f5f7" />
+      <path d="M74 12 L94 32 L74 32 Z" fill="#c9c9d2" />
+      <rect x="40" y="48" width="44" height="4" rx="2" fill="#b3b3bd" />
+      <rect x="40" y="58" width="44" height="4" rx="2" fill="#b3b3bd" />
+      <rect x="40" y="68" width="30" height="4" rx="2" fill="#b3b3bd" />
+      <rect x="36" y="82" width="30" height="14" rx="4" fill="#e74c5b" />
+      <text x="51" y="93" textAnchor="middle" fontSize="10" fontWeight="700" fill="#fff" fontFamily="Inter, sans-serif">PDF</text>
+    </svg>
+  )
+}
+
 // ── Snake ────────────────────────────────────────────────────────────
 export function SnakeIcon() {
   return (

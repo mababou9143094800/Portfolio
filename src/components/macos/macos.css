@@ -55,6 +55,32 @@
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+/* ── Variantes de fond d'écran ─────────────────────────────────────── */
+.mac-wallpaper[data-theme='1'] {
+  background: linear-gradient(160deg, #071310 0%, #0c2018 45%, #061410 100%);
+}
+.mac-wallpaper[data-theme='1'] .wp-blob-1 { background: radial-gradient(circle, #1d5c40 0%, transparent 70%); }
+.mac-wallpaper[data-theme='1'] .wp-blob-2 { background: radial-gradient(circle, #0f4a5c 0%, transparent 70%); }
+.mac-wallpaper[data-theme='1'] .wp-blob-3 { background: radial-gradient(circle, #4a6b2a 0%, transparent 70%); }
+
+.mac-wallpaper[data-theme='2'] {
+  background: linear-gradient(160deg, #1a0f0a 0%, #251108 45%, #170a0d 100%);
+}
+.mac-wallpaper[data-theme='2'] .wp-blob-1 { background: radial-gradient(circle, #8a4a1d 0%, transparent 70%); }
+.mac-wallpaper[data-theme='2'] .wp-blob-2 { background: radial-gradient(circle, #6b1d3a 0%, transparent 70%); }
+.mac-wallpaper[data-theme='2'] .wp-blob-3 { background: radial-gradient(circle, #8a6b1d 0%, transparent 70%); }
+
+/* ── Assombrissement (luminosité du Centre de contrôle) ────────────── */
+.brightness-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 8000;
+  pointer-events: none;
+  background: #000;
+  opacity: var(--desktop-dim, 0);
+  transition: opacity 0.15s;
+}
+
 /* ═══ Barre de menu ══════════════════════════════════════════════════ */
 .mac-menubar {
   position: absolute;
@@ -97,13 +123,376 @@
   font-weight: 700;
 }
 
+.menubar-entry {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 28px;
+}
+
 .menubar-item {
   font-weight: 400;
   opacity: 0.9;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 13px;
 }
 
-.menubar-status-icon {
-  opacity: 0.9;
+.menubar-item:hover,
+.menubar-item.open,
+.menubar-apple.open,
+.menubar-status-btn.open {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.menubar-status-btn {
+  display: flex;
+  align-items: center;
+  padding: 4px 6px;
+  border-radius: 5px;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.menubar-status-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* ── Menus déroulants & menus contextuels ──────────────────────────── */
+.mac-menu {
+  min-width: 230px;
+  padding: 5px;
+  border-radius: 10px;
+  background: rgba(44, 44, 52, 0.78);
+  backdrop-filter: blur(40px) saturate(1.8);
+  -webkit-backdrop-filter: blur(40px) saturate(1.8);
+  border: 0.5px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.5);
+  z-index: 9500;
+}
+
+.menubar-dropdown {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  transform-origin: top left;
+}
+
+.menubar-dropdown.align-right {
+  left: auto;
+  right: 0;
+  transform-origin: top right;
+}
+
+.context-menu {
+  position: absolute;
+  transform-origin: top left;
+}
+
+.mac-menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.92);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.mac-menu-item:hover:not(.disabled) {
+  background: var(--accent);
+}
+
+.mac-menu-item.disabled {
+  color: rgba(255, 255, 255, 0.32);
+  cursor: default;
+}
+
+.mac-menu-check {
+  width: 16px;
+  font-size: 11px;
+}
+
+.mac-menu-label {
+  flex: 1;
+}
+
+.mac-menu-shortcut {
+  margin-left: 28px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 12px;
+}
+
+.mac-menu-item:hover:not(.disabled) .mac-menu-shortcut {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.mac-menu-divider {
+  height: 1px;
+  margin: 5px 10px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* ── Centre de contrôle ────────────────────────────────────────────── */
+.control-center {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  width: 310px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(44, 44, 52, 0.78);
+  backdrop-filter: blur(40px) saturate(1.8);
+  -webkit-backdrop-filter: blur(40px) saturate(1.8);
+  border: 0.5px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.5);
+  z-index: 9500;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transform-origin: top right;
+}
+
+.cc-toggles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.cc-toggle {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 8px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  text-align: left;
+  transition: background 0.2s;
+}
+
+.cc-toggle.on {
+  background: rgba(10, 132, 255, 0.45);
+}
+
+.cc-toggle-icon {
+  grid-row: span 2;
+  font-size: 17px;
+}
+
+.cc-toggle-label {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.cc-toggle-state {
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.cc-slider label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.cc-slider input[type='range'] {
+  width: 100%;
+  accent-color: #fff;
+  cursor: pointer;
+}
+
+/* ── Spotlight ─────────────────────────────────────────────────────── */
+.spotlight-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.spotlight {
+  position: absolute;
+  top: 22%;
+  left: 50%;
+  /* Centrage par marge : Framer Motion écrase la propriété transform */
+  width: min(560px, 86%);
+  margin-left: calc(min(560px, 86%) / -2);
+  border-radius: 14px;
+  background: rgba(40, 40, 48, 0.72);
+  backdrop-filter: blur(50px) saturate(1.8);
+  -webkit-backdrop-filter: blur(50px) saturate(1.8);
+  border: 0.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+}
+
+.spotlight-input-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+}
+
+.spotlight-input-row input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 21px;
+  font-weight: 300;
+  color: var(--text-primary);
+  font-family: inherit;
+}
+
+.spotlight-input-row input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.spotlight-results {
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.spotlight-section {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 7px 10px 3px;
+}
+
+.spotlight-result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.92);
+  text-align: left;
+}
+
+.spotlight-result.active {
+  background: var(--accent);
+}
+
+.spotlight-result-icon {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spotlight-emoji {
+  font-size: 19px;
+}
+
+/* ── Icônes du bureau ──────────────────────────────────────────────── */
+.desktop-icons {
+  position: absolute;
+  top: 44px;
+  right: 18px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.desktop-icon {
+  width: 92px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 4px;
+  border-radius: 8px;
+  cursor: default;
+}
+
+.desktop-icon.selected {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.desktop-icon-img {
+  width: 52px;
+  height: 52px;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+}
+
+.desktop-icon-label {
+  font-size: 11.5px;
+  font-weight: 500;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.65);
+  word-break: break-word;
+  line-height: 1.25;
+}
+
+.desktop-icon.selected .desktop-icon-label {
+  background: var(--accent);
+  border-radius: 4px;
+  padding: 0 4px;
+}
+
+.desktop-icon-rename {
+  width: 100%;
+  background: rgba(20, 20, 26, 0.9);
+  border: 1.5px solid var(--accent);
+  border-radius: 4px;
+  color: #fff;
+  font-size: 11.5px;
+  font-family: inherit;
+  text-align: center;
+  outline: none;
+  padding: 1px 2px;
+}
+
+/* ── Poignées de redimensionnement ─────────────────────────────────── */
+.resize-handle {
+  position: absolute;
+  z-index: 20;
+  touch-action: none;
+}
+
+.resize-r {
+  top: 40px;
+  right: -3px;
+  width: 7px;
+  bottom: 14px;
+  cursor: ew-resize;
+}
+
+.resize-b {
+  left: 14px;
+  right: 14px;
+  bottom: -3px;
+  height: 7px;
+  cursor: ns-resize;
+}
+
+.resize-br {
+  right: -4px;
+  bottom: -4px;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+}
+
+/* ── Séparateur du Dock ────────────────────────────────────────────── */
+.dock-separator {
+  width: 1px;
+  align-self: stretch;
+  margin: 4px 3px;
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .menubar-clock {

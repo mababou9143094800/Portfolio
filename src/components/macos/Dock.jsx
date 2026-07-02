@@ -7,7 +7,9 @@ import {
   useAnimationControls,
 } from 'framer-motion'
 import { useWindowManager } from './WindowManager.jsx'
-import { APPS } from '../../apps/registry.jsx'
+import { useDesktopState } from './desktopState.js'
+import { DOCK_APPS, TRASH_APP } from '../../apps/registry.jsx'
+import { TrashIcon } from './icons.jsx'
 
 const ICON_SIZE = 52
 const ICON_SIZE_MAX = 88
@@ -16,6 +18,7 @@ const MAGNIFY_RANGE = 150
 export default function Dock() {
   // Position X du curseur : pilote l'effet de loupe du Dock
   const mouseX = useMotionValue(Infinity)
+  const desktop = useDesktopState()
 
   return (
     <div className="mac-dock-wrapper">
@@ -27,15 +30,21 @@ export default function Dock() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.15, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
-        {APPS.map((app) => (
+        {DOCK_APPS.map((app) => (
           <DockIcon key={app.id} app={app} mouseX={mouseX} />
         ))}
+        <div className="dock-separator" />
+        <DockIcon
+          app={TRASH_APP}
+          mouseX={mouseX}
+          renderIcon={() => <TrashIcon full={(desktop?.trashItems.length ?? 0) > 0} />}
+        />
       </motion.div>
     </div>
   )
 }
 
-function DockIcon({ app, mouseX }) {
+function DockIcon({ app, mouseX, renderIcon }) {
   const ref = useRef(null)
   const { windows, openApp } = useWindowManager()
   const bounce = useAnimationControls()
@@ -81,7 +90,7 @@ function DockIcon({ app, mouseX }) {
         onClick={handleClick}
         aria-label={`Ouvrir ${app.name}`}
       >
-        <Icon />
+        {renderIcon ? renderIcon() : <Icon />}
       </motion.button>
       <span className={`dock-dot ${isOpen ? 'visible' : ''}`} />
     </div>

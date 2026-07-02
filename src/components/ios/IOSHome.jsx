@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { APPS } from '../../apps/registry.jsx'
+import { DOCK_APPS as APPS } from '../../apps/registry.jsx'
 import { profile } from '../../content.js'
 import './ios.css'
 

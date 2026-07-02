@@ -80,6 +80,37 @@ export default function MacWindow({ app, index, state, desktopRef }) {
     el.addEventListener('pointerup', onUp)
   }
 
+  // ── Redimensionnement par les bords / le coin ─────────────────────
+  const onResizePointerDown = (dir) => (e) => {
+    if (state.maximized || e.button !== 0) return
+    e.stopPropagation()
+    const el = e.currentTarget
+    const startX = e.clientX
+    const startY = e.clientY
+    const baseW = w.get()
+    const baseH = h.get()
+    const deskW = desktopRef.current?.offsetWidth ?? window.innerWidth
+    const deskH = desktopRef.current?.offsetHeight ?? window.innerHeight
+
+    const onMove = (ev) => {
+      if (dir.includes('r')) {
+        const nw = baseW + (ev.clientX - startX)
+        w.set(Math.min(Math.max(nw, 380), deskW - x.get()))
+      }
+      if (dir.includes('b')) {
+        const nh = baseH + (ev.clientY - startY)
+        h.set(Math.min(Math.max(nh, 280), deskH - y.get()))
+      }
+    }
+    const onUp = () => {
+      el.removeEventListener('pointermove', onMove)
+      el.removeEventListener('pointerup', onUp)
+    }
+    el.setPointerCapture(e.pointerId)
+    el.addEventListener('pointermove', onMove)
+    el.addEventListener('pointerup', onUp)
+  }
+
   // ── Variants ouverture / réduction / fermeture ───────────────────
   const variants = {
     hidden: { scale: 0.5, opacity: 0, y: 48 },
@@ -167,6 +198,15 @@ export default function MacWindow({ app, index, state, desktopRef }) {
         <div className="mac-window-body">
           <AppContent />
         </div>
+
+        {/* Poignées de redimensionnement */}
+        {!state.maximized && (
+          <>
+            <div className="resize-handle resize-r" onPointerDown={onResizePointerDown('r')} />
+            <div className="resize-handle resize-b" onPointerDown={onResizePointerDown('b')} />
+            <div className="resize-handle resize-br" onPointerDown={onResizePointerDown('rb')} />
+          </>
+        )}
       </motion.div>
     </motion.div>
   )

@@ -73,3 +73,9 @@ export function useWindowManager() {
   if (!ctx) throw new Error('useWindowManager doit être utilisé dans WindowManagerProvider')
   return ctx
 }
+
+// Variante tolérante pour les composants d'apps partagés avec la version
+// iOS, qui s'affichent hors du provider.
+export function useOptionalWindowManager() {
+  return useContext(WindowManagerContext)
+}
