@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion'
-import { pillars } from '../content.js'
+import { useLang } from '../i18n.jsx'
 import './apps.css'
 
 // Mes 4 piliers : grille 2×2 de cartes animées.
 export default function Pillars() {
+  const { t, pillars } = useLang()
   return (
     <div className="pillars">
       <motion.p
@@ -12,7 +13,7 @@ export default function Pillars() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        Quatre valeurs guident chacun de mes projets.
+        {t.pillarsApp.intro}
       </motion.p>
       <div className="pillars-grid">
         {pillars.map((p, i) => (

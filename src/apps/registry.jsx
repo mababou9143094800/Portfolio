@@ -1,4 +1,5 @@
-import { FinderIcon, MailIcon, PillarsIcon, SnakeIcon, TrashIcon, FileIcon } from '../components/macos/icons.jsx'
+import { FinderIcon, MailIcon, PillarsIcon, SnakeIcon, TrashIcon, FileIcon, GitHubIcon, LinkedInIcon, SettingsIcon } from '../components/macos/icons.jsx'
+import { profileBase } from '../content.js'
 import FinderProjects from './FinderProjects.jsx'
 import MailContact from './MailContact.jsx'
 import Pillars from './Pillars.jsx'
@@ -6,10 +7,13 @@ import SnakeGame from './SnakeGame.jsx'
 import AboutMac from './AboutMac.jsx'
 import CVPreview from './CVPreview.jsx'
 import TrashApp from './TrashApp.jsx'
+import SettingsApp from './SettingsApp.jsx'
 
 // Toutes les applications. `dock` : true = zone principale du Dock,
 // 'trash' = à droite du séparateur, false = ouvrable uniquement
 // via menus / Spotlight / icônes du bureau.
+// Les apps avec `href` n'ouvrent pas de fenêtre : elles renvoient vers
+// un lien externe dans un nouvel onglet.
 export const APPS = [
   {
     id: 'projects',
@@ -45,6 +49,29 @@ export const APPS = [
     component: SnakeGame,
     width: 460,
     height: 600,
+    dock: true,
+  },
+  {
+    id: 'github',
+    name: 'GitHub',
+    icon: GitHubIcon,
+    href: profileBase.github,
+    dock: true,
+  },
+  {
+    id: 'linkedin',
+    name: 'LinkedIn',
+    icon: LinkedInIcon,
+    href: profileBase.linkedin,
+    dock: true,
+  },
+  {
+    id: 'settings',
+    name: 'Réglages Système',
+    icon: SettingsIcon,
+    component: SettingsApp,
+    width: 520,
+    height: 480,
     dock: true,
   },
   {

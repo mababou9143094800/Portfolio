@@ -2,11 +2,12 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useWindowManager } from './WindowManager.jsx'
 import { APPS } from '../../apps/registry.jsx'
-import { projects } from '../../content.js'
+import { useLang } from '../../i18n.jsx'
 
 // Recherche Spotlight : apps + projets, navigation clavier complète.
 export default function Spotlight({ onClose }) {
   const wm = useWindowManager()
+  const { t, projects, appName } = useLang()
   const inputRef = useRef(null)
   const [query, setQuery] = useState('')
   const [index, setIndex] = useState(0)
@@ -18,13 +19,14 @@ export default function Spotlight({ onClose }) {
   const results = useMemo(() => {
     const q = query.trim().toLowerCase()
     const apps = APPS.filter((a) => a.dock !== false || a.id === 'cv')
-      .filter((a) => !q || a.name.toLowerCase().includes(q))
+      .filter((a) => !q || appName(a).toLowerCase().includes(q))
       .map((a) => ({
-        type: 'Applications',
+        type: t.spotlight.applications,
         id: `app-${a.id}`,
-        label: a.name,
+        label: appName(a),
         icon: a.icon,
-        run: () => wm.openApp(a.id),
+        run: () =>
+          a.href ? window.open(a.href, '_blank', 'noopener,noreferrer') : wm.openApp(a.id),
       }))
     const projs = projects
       .filter(
@@ -34,7 +36,7 @@ export default function Spotlight({ onClose }) {
             p.stack.some((s) => s.toLowerCase().includes(q))),
       )
       .map((p) => ({
-        type: 'Projets',
+        type: t.spotlight.projects,
         id: `proj-${p.id}`,
         label: p.name,
         emoji: p.emoji,
@@ -45,7 +47,7 @@ export default function Spotlight({ onClose }) {
         },
       }))
     return [...apps, ...projs]
-  }, [query, wm])
+  }, [query, wm, t, projects, appName])
 
   useEffect(() => setIndex(0), [query])
 
@@ -91,7 +93,7 @@ export default function Spotlight({ onClose }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onKeyDown}
-            placeholder="Recherche Spotlight"
+            placeholder={t.spotlight.placeholder}
             spellCheck={false}
           />
         </div>

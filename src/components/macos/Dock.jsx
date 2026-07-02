@@ -10,6 +10,7 @@ import { useWindowManager } from './WindowManager.jsx'
 import { useDesktopState } from './desktopState.js'
 import { DOCK_APPS, TRASH_APP } from '../../apps/registry.jsx'
 import { TrashIcon } from './icons.jsx'
+import { useLang } from '../../i18n.jsx'
 
 const ICON_SIZE = 52
 const ICON_SIZE_MAX = 88
@@ -47,6 +48,7 @@ export default function Dock() {
 function DockIcon({ app, mouseX, renderIcon }) {
   const ref = useRef(null)
   const { windows, openApp } = useWindowManager()
+  const { t, appName } = useLang()
   const bounce = useAnimationControls()
 
   const state = windows[app.id]
@@ -73,6 +75,11 @@ function DockIcon({ app, mouseX, renderIcon }) {
         transition: { duration: 0.8, ease: 'easeOut' },
       })
     }
+    // App lien externe (GitHub, LinkedIn…) : nouvel onglet, pas de fenêtre
+    if (app.href) {
+      window.open(app.href, '_blank', 'noopener,noreferrer')
+      return
+    }
     openApp(app.id)
   }
 
@@ -80,7 +87,7 @@ function DockIcon({ app, mouseX, renderIcon }) {
 
   return (
     <div className="dock-item">
-      <span className="dock-tooltip">{app.name}</span>
+      <span className="dock-tooltip">{appName(app)}</span>
       <motion.button
         ref={ref}
         className="dock-icon"
@@ -88,7 +95,7 @@ function DockIcon({ app, mouseX, renderIcon }) {
         animate={bounce}
         whileTap={{ scale: 0.92 }}
         onClick={handleClick}
-        aria-label={`Ouvrir ${app.name}`}
+        aria-label={t.dock.openApp(appName(app))}
       >
         {renderIcon ? renderIcon() : <Icon />}
       </motion.button>

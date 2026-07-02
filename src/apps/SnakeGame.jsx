@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useLang } from '../i18n.jsx'
 import './apps.css'
 
 const GRID = 20
@@ -30,6 +31,7 @@ function randomFood(snake) {
 }
 
 export default function SnakeGame() {
+  const { t } = useLang()
   const canvasRef = useRef(null)
   const [status, setStatus] = useState('idle') // idle | playing | over
   const [score, setScore] = useState(0)
@@ -148,13 +150,13 @@ export default function SnakeGame() {
     <div className="snake" onTouchStart={onTouchStart} onTouchMove={onTouchMove}>
       <div className="snake-header">
         <div className="snake-score">
-          <span className="snake-score-label">Score</span>
+          <span className="snake-score-label">{t.snake.score}</span>
           <motion.span key={score} className="snake-score-value" initial={{ scale: 1.4 }} animate={{ scale: 1 }}>
             {score}
           </motion.span>
         </div>
         <div className="snake-score">
-          <span className="snake-score-label">Record</span>
+          <span className="snake-score-label">{t.snake.best}</span>
           <span className="snake-score-value best">{best}</span>
         </div>
       </div>
@@ -176,7 +178,7 @@ export default function SnakeGame() {
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ type: 'spring', stiffness: 300, damping: 18 }}
                 >
-                  Game Over
+                  {t.snake.gameOver}
                 </motion.p>
               )}
               <motion.button
@@ -185,9 +187,9 @@ export default function SnakeGame() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {status === 'over' ? 'Rejouer' : 'Jouer'}
+                {status === 'over' ? t.snake.replay : t.snake.play}
               </motion.button>
-              <p className="snake-help">Flèches ou ZQSD — swipe sur mobile</p>
+              <p className="snake-help">{t.snake.help}</p>
             </motion.div>
           )}
         </AnimatePresence>

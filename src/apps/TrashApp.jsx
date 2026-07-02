@@ -1,24 +1,26 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useDesktopState } from '../components/macos/desktopState.js'
 import { FolderIcon } from '../components/macos/icons.jsx'
+import { useLang } from '../i18n.jsx'
 import './apps.css'
 
 // Fenêtre Corbeille : contient quelques reliques + les dossiers que le
 // visiteur a supprimés du bureau.
 export default function TrashApp() {
   const desktop = useDesktopState()
+  const { t } = useLang()
   const items = desktop?.trashItems ?? []
 
   return (
     <div className="trash">
       <div className="trash-toolbar">
-        <span>{items.length === 0 ? 'La corbeille est vide' : `${items.length} élément${items.length > 1 ? 's' : ''}`}</span>
+        <span>{items.length === 0 ? t.trash.empty : t.trash.items(items.length)}</span>
         <button
           className="trash-empty-btn"
           disabled={items.length === 0}
           onClick={() => desktop?.emptyTrash()}
         >
-          Vider la corbeille
+          {t.trash.emptyTrash}
         </button>
       </div>
       <div className="trash-grid">
@@ -42,7 +44,7 @@ export default function TrashApp() {
         </AnimatePresence>
         {items.length === 0 && (
           <motion.p className="trash-empty-msg" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            Rien ici. Comme ma dette technique. 🧹
+            {t.trash.emptyJoke}
           </motion.p>
         )}
       </div>

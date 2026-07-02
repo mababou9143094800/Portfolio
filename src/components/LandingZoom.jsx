@@ -7,14 +7,16 @@ import {
   useMotionValueEvent,
 } from 'framer-motion'
 import Desktop from './macos/Desktop.jsx'
-import { profile } from '../content.js'
+import { useLang } from '../i18n.jsx'
 import './landing.css'
 
 // La page fait ~3 hauteurs d'écran : le scroll pilote le zoom progressif
 // du mini-bureau (à droite du hero) jusqu'au plein écran.
 export default function LandingZoom() {
   const containerRef = useRef(null)
+  const { lang, setLang, t, profile } = useLang()
   const [zoomed, setZoomed] = useState(false)
+  const [bioExpanded, setBioExpanded] = useState(false)
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -56,13 +58,33 @@ export default function LandingZoom() {
           className="hero"
           style={{ opacity: heroOpacity, x: heroX, pointerEvents: zoomed ? 'none' : 'auto' }}
         >
+          <motion.div
+            className="hero-lang"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8, duration: 0.5 }}
+          >
+            <button
+              className={lang === 'fr' ? 'active' : ''}
+              onClick={() => setLang('fr')}
+            >
+              FR
+            </button>
+            <span>/</span>
+            <button
+              className={lang === 'en' ? 'active' : ''}
+              onClick={() => setLang('en')}
+            >
+              EN
+            </button>
+          </motion.div>
           <motion.p
             className="hero-hello"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
-            Bonjour, je suis
+            {t.landing.hello}
           </motion.p>
           <motion.h1
             className="hero-name"
@@ -81,14 +103,22 @@ export default function LandingZoom() {
           >
             {profile.role}
           </motion.h2>
-          <motion.p
-            className="hero-bio"
+          <motion.div
+            className="hero-bio-wrap"
             initial={{ opacity: 0, y: 32 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.46, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
-            {profile.bio}
-          </motion.p>
+            <p className={`hero-bio ${bioExpanded ? 'expanded' : 'collapsed'}`}>
+              {profile.bio}
+            </p>
+            <button
+              className="hero-bio-toggle"
+              onClick={() => setBioExpanded((v) => !v)}
+            >
+              {bioExpanded ? t.landing.showLess : t.landing.showMore}
+            </button>
+          </motion.div>
           <motion.button
             className="hero-cta"
             onClick={scrollToDesktop}
@@ -98,7 +128,7 @@ export default function LandingZoom() {
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
           >
-            Explorer mon bureau
+            {t.landing.cta}
           </motion.button>
         </motion.header>
 

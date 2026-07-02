@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import MenuList from './MenuList.jsx'
 import { useWindowManager } from './WindowManager.jsx'
 import { APPS } from '../../apps/registry.jsx'
-import { profile } from '../../content.js'
+import { useLang } from '../../i18n.jsx'
 
 function useClock() {
   const [now, setNow] = useState(() => new Date())
@@ -14,14 +14,15 @@ function useClock() {
   return now
 }
 
-const dateFmt = new Intl.DateTimeFormat('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })
-const timeFmt = new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', minute: '2-digit' })
-
 const NETWORKS = ['Livebox-Mathieu', 'Freebox-du-voisin', 'iPhone de Mathieu']
 
 export default function MenuBar({ appName, onExitRequest, cycleWallpaper, openSpotlight }) {
   const now = useClock()
   const wm = useWindowManager()
+  const { t, profile, appName: localizedAppName } = useLang()
+  const m = t.menubar
+  const dateFmt = new Intl.DateTimeFormat(t.locale, { weekday: 'short', day: 'numeric', month: 'short' })
+  const timeFmt = new Intl.DateTimeFormat(t.locale, { hour: '2-digit', minute: '2-digit' })
   const rootRef = useRef(null)
   const [openMenu, setOpenMenu] = useState(null) // id du menu / popover ouvert
   const [wifiNetwork, setWifiNetwork] = useState(NETWORKS[0])
@@ -51,69 +52,69 @@ export default function MenuBar({ appName, onExitRequest, cycleWallpaper, openSp
   // ── Définition des menus ──────────────────────────────────────────
   const menus = {
     apple: [
-      { label: 'À propos de ce portfolio', action: () => wm.openApp('about') },
+      { label: m.about, action: () => wm.openApp('about') },
       { divider: true },
-      { label: 'Réglages Système…', disabled: true },
-      { label: 'Changer le fond d’écran', action: cycleWallpaper },
+      { label: m.settings, action: () => wm.openApp('settings') },
+      { label: m.changeWallpaper, action: cycleWallpaper },
       { divider: true },
-      { label: 'Revenir à l’accueil', action: onExitRequest },
+      { label: m.backHome, action: onExitRequest },
       { divider: true },
-      { label: 'Redémarrer…', action: () => window.location.reload() },
-      { label: 'Verrouiller l’écran', shortcut: '⌃⌘Q', disabled: true },
+      { label: m.restart, action: () => window.location.reload() },
+      { label: m.lockScreen, shortcut: '⌃⌘Q', disabled: true },
     ],
     file: [
-      { label: 'Nouvelle fenêtre Finder', shortcut: '⌘N', action: () => wm.openApp('projects') },
-      { label: 'Nouveau message', action: () => wm.openApp('contact') },
+      { label: m.newFinderWindow, shortcut: '⌘N', action: () => wm.openApp('projects') },
+      { label: m.newMessage, action: () => wm.openApp('contact') },
       { divider: true },
-      { label: 'Fermer la fenêtre', shortcut: '⌘W', disabled: !focused, action: () => wm.closeApp(focused) },
-      { label: 'Tout fermer', shortcut: '⌥⌘W', disabled: !wm.anyOpen, action: closeAll },
+      { label: m.closeWindow, shortcut: '⌘W', disabled: !focused, action: () => wm.closeApp(focused) },
+      { label: m.closeAll, shortcut: '⌥⌘W', disabled: !wm.anyOpen, action: closeAll },
     ],
     edit: [
-      { label: 'Annuler', shortcut: '⌘Z', disabled: true },
-      { label: 'Rétablir', shortcut: '⇧⌘Z', disabled: true },
+      { label: m.undo, shortcut: '⌘Z', disabled: true },
+      { label: m.redo, shortcut: '⇧⌘Z', disabled: true },
       { divider: true },
-      { label: 'Couper', shortcut: '⌘X', disabled: true },
-      { label: 'Copier', shortcut: '⌘C', disabled: true },
-      { label: 'Coller', shortcut: '⌘V', disabled: true },
-      { label: 'Tout sélectionner', shortcut: '⌘A', disabled: true },
+      { label: m.cut, shortcut: '⌘X', disabled: true },
+      { label: m.copy, shortcut: '⌘C', disabled: true },
+      { label: m.paste, shortcut: '⌘V', disabled: true },
+      { label: m.selectAll, shortcut: '⌘A', disabled: true },
     ],
     view: [
       {
-        label: focusedWin?.maximized ? 'Quitter le plein écran' : 'Activer le plein écran',
+        label: focusedWin?.maximized ? m.exitFullscreen : m.enterFullscreen,
         shortcut: '⌃⌘F',
         disabled: !focused,
         action: () => wm.toggleMaximize(focused),
       },
       { divider: true },
-      { label: 'Changer le fond d’écran', action: cycleWallpaper },
-      { label: 'Masquer la barre des menus', disabled: true },
+      { label: m.changeWallpaper, action: cycleWallpaper },
+      { label: m.hideMenuBar, disabled: true },
     ],
     window: [
-      { label: 'Réduire', shortcut: '⌘M', disabled: !focused, action: () => wm.minimizeApp(focused) },
-      { label: 'Agrandir', disabled: !focused, action: () => wm.toggleMaximize(focused) },
+      { label: m.minimize, shortcut: '⌘M', disabled: !focused, action: () => wm.minimizeApp(focused) },
+      { label: m.zoom, disabled: !focused, action: () => wm.toggleMaximize(focused) },
       { divider: true },
       ...(wm.anyOpen
         ? APPS.filter((a) => wm.windows[a.id]?.open).map((a) => ({
-            label: a.name,
+            label: localizedAppName(a),
             checked: a.id === focused,
             action: () => wm.openApp(a.id),
           }))
-        : [{ label: 'Aucune fenêtre ouverte', disabled: true }]),
+        : [{ label: m.noWindow, disabled: true }]),
     ],
     help: [
-      { label: 'Rechercher (Spotlight)', shortcut: '⌘K', action: openSpotlight },
+      { label: m.spotlight, shortcut: '⌘K', action: openSpotlight },
       { divider: true },
-      { label: 'Code source sur GitHub', action: () => window.open(profile.github, '_blank') },
-      { label: 'Me contacter', action: () => wm.openApp('contact') },
+      { label: m.sourceCode, action: () => window.open(profile.github, '_blank', 'noopener,noreferrer') },
+      { label: m.contactMe, action: () => wm.openApp('contact') },
     ],
   }
 
   const MENU_TITLES = [
-    ['file', 'Fichier'],
-    ['edit', 'Édition'],
-    ['view', 'Présentation'],
-    ['window', 'Fenêtre'],
-    ['help', 'Aide'],
+    ['file', m.titles.file],
+    ['edit', m.titles.edit],
+    ['view', m.titles.view],
+    ['window', m.titles.window],
+    ['help', m.titles.help],
   ]
 
   const toggle = (id) => setOpenMenu((m) => (m === id ? null : id))
@@ -179,7 +180,7 @@ export default function MenuBar({ appName, onExitRequest, cycleWallpaper, openSp
                 onClose={() => setOpenMenu(null)}
                 items={[
                   {
-                    label: toggles.wifi ? 'Wi-Fi : activé' : 'Wi-Fi : désactivé',
+                    label: toggles.wifi ? m.wifiOn : m.wifiOff,
                     action: () => setToggles((t) => ({ ...t, wifi: !t.wifi })),
                   },
                   { divider: true },
@@ -229,10 +230,10 @@ export default function MenuBar({ appName, onExitRequest, cycleWallpaper, openSp
               >
                 <div className="cc-toggles">
                   {[
-                    ['wifi', 'Wi-Fi', '📶'],
-                    ['bluetooth', 'Bluetooth', '🔵'],
-                    ['airdrop', 'AirDrop', '📡'],
-                    ['focus', 'Concentration', '🌙'],
+                    ['wifi', m.ccToggles.wifi, '📶'],
+                    ['bluetooth', m.ccToggles.bluetooth, '🔵'],
+                    ['airdrop', m.ccToggles.airdrop, '📡'],
+                    ['focus', m.ccToggles.focus, '🌙'],
                   ].map(([key, label, icon]) => (
                     <button
                       key={key}
@@ -241,16 +242,16 @@ export default function MenuBar({ appName, onExitRequest, cycleWallpaper, openSp
                     >
                       <span className="cc-toggle-icon">{icon}</span>
                       <span className="cc-toggle-label">{label}</span>
-                      <span className="cc-toggle-state">{toggles[key] ? 'Activé' : 'Désactivé'}</span>
+                      <span className="cc-toggle-state">{toggles[key] ? m.on : m.off}</span>
                     </button>
                   ))}
                 </div>
                 <div className="cc-slider">
-                  <label>☀️ Luminosité</label>
+                  <label>☀️ {m.brightness}</label>
                   <BrightnessSlider />
                 </div>
                 <div className="cc-slider">
-                  <label>{volume === 0 ? '🔇' : volume < 50 ? '🔉' : '🔊'} Son</label>
+                  <label>{volume === 0 ? '🔇' : volume < 50 ? '🔉' : '🔊'} {m.sound}</label>
                   <input
                     type="range"
                     min="0"
@@ -283,10 +284,10 @@ export default function MenuBar({ appName, onExitRequest, cycleWallpaper, openSp
                 className="menubar-dropdown align-right"
                 onClose={() => setOpenMenu(null)}
                 items={[
-                  { label: 'Batterie : 87 %', disabled: true },
-                  { label: 'Source : adaptateur secteur', disabled: true },
+                  { label: m.battery, disabled: true },
+                  { label: m.powerSource, disabled: true },
                   { divider: true },
-                  { label: 'Réglages de la batterie…', disabled: true },
+                  { label: m.batterySettings, action: () => wm.openApp('settings') },
                 ]}
               />
             )}

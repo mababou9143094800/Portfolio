@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { profile } from '../content.js'
+import { useLang } from '../i18n.jsx'
 import './apps.css'
 
 // Fenêtre style « Nouveau message » de Mail : le bouton d'envoi ouvre le
 // client mail du visiteur avec l'adresse et le contenu pré-remplis.
 export default function MailContact() {
+  const { t, profile } = useLang()
   const [subject, setSubject] = useState('')
   const [body, setBody] = useState('')
   const [sent, setSent] = useState(false)
@@ -19,7 +20,7 @@ export default function MailContact() {
 
   const send = () => {
     const url = `mailto:${profile.email}?subject=${encodeURIComponent(
-      subject || 'Contact depuis votre portfolio',
+      subject || t.mail.defaultSubject,
     )}&body=${encodeURIComponent(body)}`
     window.location.href = url
     setSent(true)
@@ -34,7 +35,7 @@ export default function MailContact() {
           onClick={send}
           whileHover={{ scale: 1.06 }}
           whileTap={{ scale: 0.94 }}
-          title="Envoyer"
+          title={t.mail.send}
         >
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
             <path
@@ -46,18 +47,18 @@ export default function MailContact() {
             />
           </svg>
         </motion.button>
-        <span className="mail-toolbar-title">{sent ? 'Ouverture de votre app Mail…' : 'Nouveau message'}</span>
+        <span className="mail-toolbar-title">{sent ? t.mail.opening : t.mail.newMessage}</span>
         <div className="mail-toolbar-icons">
           <button
             className="mail-tool-btn"
-            title="Pièce jointe"
-            onClick={() => showToast('Les pièces jointes ne sont pas disponibles dans la démo 😉')}
+            title={t.mail.attach}
+            onClick={() => showToast(t.mail.attachToast)}
           >
             📎
           </button>
           <button
             className="mail-tool-btn"
-            title="Taille du texte"
+            title={t.mail.textSize}
             onClick={() => setFontSize((s) => (s >= 18 ? 14 : s + 2))}
           >
             Aa
@@ -69,17 +70,17 @@ export default function MailContact() {
 
       <div className="mail-fields">
         <div className="mail-field">
-          <label>À :</label>
+          <label>{t.mail.to}</label>
           <span className="mail-recipient">
             {profile.firstName} {profile.lastName} &lt;{profile.email}&gt;
           </span>
         </div>
         <div className="mail-field">
-          <label>Objet :</label>
+          <label>{t.mail.subject}</label>
           <input
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
-            placeholder="Une idée de projet ? Une opportunité ?"
+            placeholder={t.mail.subjectPlaceholder}
           />
         </div>
       </div>
@@ -89,7 +90,7 @@ export default function MailContact() {
         style={{ fontSize }}
         value={body}
         onChange={(e) => setBody(e.target.value)}
-        placeholder={`Bonjour ${profile.firstName},\n\nJe vous contacte au sujet de…`}
+        placeholder={t.mail.bodyPlaceholder(profile.firstName)}
       />
 
       <div className="mail-footer">

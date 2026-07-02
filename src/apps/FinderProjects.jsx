@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { projects, profile } from '../content.js'
 import { useOptionalWindowManager } from '../components/macos/WindowManager.jsx'
+import { useLang } from '../i18n.jsx'
 import './apps.css'
 
 const TAGS = [
@@ -10,16 +10,16 @@ const TAGS = [
   ['Open source', '#4ab87a'],
 ]
 
-const VIEW_LABELS = {
-  all: 'Mes Projets',
-  recent: 'Récents',
-  downloads: 'Téléchargements',
-}
-
 // Fenêtre style Finder : sidebar, recherche, tags et navigation
 // précédent/suivant réellement fonctionnels.
 export default function FinderProjects() {
   const wm = useOptionalWindowManager()
+  const { t, profile, projects } = useLang()
+  const VIEW_LABELS = {
+    all: t.finder.allProjects,
+    recent: t.finder.recents,
+    downloads: t.finder.downloads,
+  }
   const [history, setHistory] = useState([{ type: 'all' }])
   const [histIndex, setHistIndex] = useState(0)
   const [query, setQuery] = useState('')
@@ -38,23 +38,30 @@ export default function FinderProjects() {
   const goForward = () =>
     histIndex < history.length - 1 && (setHistIndex(histIndex + 1), setSelectedId(null))
 
-  // Sélection demandée par Spotlight / ouverture d'un dossier du bureau
+  // Sélection demandée par Spotlight / ouverture d'un dossier du bureau.
+  // Les valeurs transitent par des globals/événements : on les valide contre
+  // les données connues avant de les utiliser.
+  const isValidProjectId = (id) => projects.some((p) => p.id === id)
+  const isValidView = (v) =>
+    v && typeof v === 'object' && ['all', 'recent', 'downloads', 'tag', 'folder'].includes(v.type)
+
   useEffect(() => {
-    if (window.__pendingProject) {
+    if (isValidProjectId(window.__pendingProject)) {
       setSelectedId(window.__pendingProject)
-      window.__pendingProject = null
     }
-    if (window.__pendingFinderView) {
+    window.__pendingProject = null
+    if (isValidView(window.__pendingFinderView)) {
       const v = window.__pendingFinderView
-      window.__pendingFinderView = null
       setHistory((h) => [...h, v])
       setHistIndex((i) => i + 1)
     }
+    window.__pendingFinderView = null
     const onSelect = (e) => {
+      if (!isValidProjectId(e.detail)) return
       navigate({ type: 'all' })
       setSelectedId(e.detail)
     }
-    const onNavigate = (e) => navigate(e.detail)
+    const onNavigate = (e) => isValidView(e.detail) && navigate(e.detail)
     window.addEventListener('finder:select', onSelect)
     window.addEventListener('finder:navigate', onNavigate)
     return () => {
@@ -94,26 +101,26 @@ export default function FinderProjects() {
   return (
     <div className="finder">
       <aside className="finder-sidebar">
-        <p className="finder-sidebar-heading">Favoris</p>
+        <p className="finder-sidebar-heading">{t.finder.favorites}</p>
         <button
           className={`finder-sidebar-item ${view.type === 'all' ? 'active' : ''}`}
           onClick={() => navigate({ type: 'all' })}
         >
-          <span className="fs-icon">📁</span> Mes Projets
+          <span className="fs-icon">📁</span> {t.finder.allProjects}
         </button>
         <button
           className={`finder-sidebar-item ${view.type === 'recent' ? 'active' : ''}`}
           onClick={() => navigate({ type: 'recent' })}
         >
-          <span className="fs-icon">🕘</span> Récents
+          <span className="fs-icon">🕘</span> {t.finder.recents}
         </button>
         <button
           className={`finder-sidebar-item ${view.type === 'downloads' ? 'active' : ''}`}
           onClick={() => navigate({ type: 'downloads' })}
         >
-          <span className="fs-icon">⬇️</span> Téléchargements
+          <span className="fs-icon">⬇️</span> {t.finder.downloads}
         </button>
-        <p className="finder-sidebar-heading">Tags</p>
+        <p className="finder-sidebar-heading">{t.finder.tags}</p>
         {TAGS.map(([tag, color]) => (
           <button
             key={tag}
@@ -132,7 +139,7 @@ export default function FinderProjects() {
               className="finder-nav-btn"
               onClick={goBack}
               disabled={histIndex === 0}
-              aria-label="Précédent"
+              aria-label={t.finder.back}
             >
               ‹
             </button>
@@ -140,7 +147,7 @@ export default function FinderProjects() {
               className="finder-nav-btn"
               onClick={goForward}
               disabled={histIndex >= history.length - 1}
-              aria-label="Suivant"
+              aria-label={t.finder.forward}
             >
               ›
             </button>
@@ -154,7 +161,7 @@ export default function FinderProjects() {
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Rechercher"
+              placeholder={t.finder.search}
               spellCheck={false}
             />
           </div>
@@ -198,7 +205,7 @@ export default function FinderProjects() {
 
             {items.length === 0 && view.type !== 'downloads' && (
               <p className="finder-empty">
-                {view.type === 'folder' ? 'Ce dossier est vide.' : 'Aucun résultat.'}
+                {view.type === 'folder' ? t.finder.emptyFolder : t.finder.noResults}
               </p>
             )}
           </div>
@@ -226,10 +233,10 @@ export default function FinderProjects() {
                 </div>
                 <div className="finder-detail-links">
                   <a href={selected.link} target="_blank" rel="noreferrer" className="detail-btn primary">
-                    Voir le projet ↗
+                    {t.finder.viewProject}
                   </a>
                   <a href={selected.repo} target="_blank" rel="noreferrer" className="detail-btn">
-                    Code source
+                    {t.finder.sourceCode}
                   </a>
                 </div>
               </motion.aside>
@@ -238,9 +245,8 @@ export default function FinderProjects() {
         </div>
 
         <div className="finder-statusbar">
-          {view.type === 'downloads' ? 1 : items.length} élément
-          {(view.type === 'downloads' ? 1 : items.length) > 1 ? 's' : ''}
-          {selected ? ` — « ${selected.name} » sélectionné` : ''}
+          {t.finder.items(view.type === 'downloads' ? 1 : items.length)}
+          {selected ? t.finder.selected(selected.name) : ''}
         </div>
       </div>
     </div>

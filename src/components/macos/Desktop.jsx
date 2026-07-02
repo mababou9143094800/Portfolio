@@ -9,7 +9,7 @@ import MenuList from './MenuList.jsx'
 import Spotlight from './Spotlight.jsx'
 import { FileIcon, FolderIcon } from './icons.jsx'
 import { APPS } from '../../apps/registry.jsx'
-import { profile } from '../../content.js'
+import { useLang } from '../../i18n.jsx'
 import './macos.css'
 
 export default function Desktop({ interactive, onExitRequest }) {
@@ -32,6 +32,7 @@ function DesktopInner({ interactive, onExitRequest }) {
   const desktopRef = useRef(null)
   const wm = useWindowManager()
   const { windows, anyOpen, anyVisible, focusedId } = wm
+  const { t, profile, appName } = useLang()
 
   const [wallpaper, setWallpaper] = useState(0)
   const [spotlightOpen, setSpotlightOpen] = useState(false)
@@ -51,7 +52,7 @@ function DesktopInner({ interactive, onExitRequest }) {
     const id = `folder-${folderCounter}`
     setDesktopItems((items) => [
       ...items,
-      { id, type: 'folder', name: folderCounter === 1 ? 'Dossier sans titre' : `Dossier sans titre ${folderCounter}` },
+      { id, type: 'folder', name: folderCounter === 1 ? t.desktop.untitledFolder : `${t.desktop.untitledFolder} ${folderCounter}` },
     ])
     setRenamingId(id)
     setSelectedIcon(id)
@@ -103,28 +104,28 @@ function DesktopInner({ interactive, onExitRequest }) {
         items:
           item?.type === 'file'
             ? [
-                { label: 'Ouvrir', action: () => wm.openApp('cv') },
+                { label: t.desktop.open, action: () => wm.openApp('cv') },
                 { divider: true },
-                { label: 'Placer dans la corbeille', disabled: true },
-                { label: 'Obtenir les infos', disabled: true },
+                { label: t.desktop.moveToTrash, disabled: true },
+                { label: t.desktop.getInfo, disabled: true },
               ]
             : [
-                { label: 'Ouvrir', action: () => openFolder(item) },
-                { label: 'Renommer', action: () => setRenamingId(id) },
+                { label: t.desktop.open, action: () => openFolder(item) },
+                { label: t.desktop.rename, action: () => setRenamingId(id) },
                 { divider: true },
-                { label: 'Placer dans la corbeille', action: () => moveToTrash(id) },
+                { label: t.desktop.moveToTrash, action: () => moveToTrash(id) },
               ],
       })
     } else if (!chrome) {
       setCtxMenu({
         ...pos,
         items: [
-          { label: 'Nouveau dossier', action: newFolder },
+          { label: t.desktop.newFolder, action: newFolder },
           { divider: true },
-          { label: 'Changer le fond d’écran', action: cycleWallpaper },
-          { label: 'Ranger le bureau', disabled: true },
+          { label: t.desktop.changeWallpaper, action: cycleWallpaper },
+          { label: t.desktop.cleanUp, disabled: true },
           { divider: true },
-          { label: 'Obtenir les infos', disabled: true },
+          { label: t.desktop.getInfo, disabled: true },
         ],
       })
     } else {
@@ -164,7 +165,7 @@ function DesktopInner({ interactive, onExitRequest }) {
         </div>
 
         <MenuBar
-          appName={focusedApp?.name ?? 'Finder'}
+          appName={focusedApp ? appName(focusedApp) : t.menubar.finder}
           onExitRequest={onExitRequest}
           cycleWallpaper={cycleWallpaper}
           openSpotlight={() => setSpotlightOpen(true)}
@@ -199,11 +200,8 @@ function DesktopInner({ interactive, onExitRequest }) {
               animate={{ opacity: 1, y: 0, transition: { delay: 0.5, duration: 0.6 } }}
               exit={{ opacity: 0, transition: { duration: 0.25 } }}
             >
-              <p>Bienvenue sur mon bureau 👋</p>
-              <span>
-                Ouvrez une app du Dock, explorez les menus, faites un clic droit… tout est
-                interactif. Remontez pour revenir à l’accueil.
-              </span>
+              <p>{t.desktop.hintTitle}</p>
+              <span>{t.desktop.hintText}</span>
             </motion.div>
           )}
         </AnimatePresence>

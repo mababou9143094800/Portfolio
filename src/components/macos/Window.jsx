@@ -1,12 +1,14 @@
 import { useEffect, useRef } from 'react'
 import { motion, useMotionValue, animate } from 'framer-motion'
 import { useWindowManager } from './WindowManager.jsx'
+import { useLang } from '../../i18n.jsx'
 
 const MENUBAR_H = 28
 const DOCK_SPACE = 86
 
 export default function MacWindow({ app, index, state, desktopRef }) {
   const { closeApp, minimizeApp, toggleMaximize, focusApp, focusedId } = useWindowManager()
+  const { t, appName } = useLang()
   const focused = focusedId === app.id
 
   const initial = useRef(null)
@@ -167,7 +169,7 @@ export default function MacWindow({ app, index, state, desktopRef }) {
             <button
               className="tl tl-close"
               onClick={() => closeApp(app.id)}
-              aria-label="Fermer"
+              aria-label={t.window.close}
             >
               <svg viewBox="0 0 12 12">
                 <path d="M3.2 3.2l5.6 5.6M8.8 3.2l-5.6 5.6" stroke="#7d1d17" strokeWidth="1.4" strokeLinecap="round" />
@@ -176,7 +178,7 @@ export default function MacWindow({ app, index, state, desktopRef }) {
             <button
               className="tl tl-min"
               onClick={() => minimizeApp(app.id)}
-              aria-label="Réduire"
+              aria-label={t.window.minimize}
             >
               <svg viewBox="0 0 12 12">
                 <path d="M2.5 6h7" stroke="#9a6b07" strokeWidth="1.6" strokeLinecap="round" />
@@ -185,14 +187,14 @@ export default function MacWindow({ app, index, state, desktopRef }) {
             <button
               className="tl tl-max"
               onClick={() => toggleMaximize(app.id)}
-              aria-label="Agrandir"
+              aria-label={t.window.maximize}
             >
               <svg viewBox="0 0 12 12">
                 <path d="M3.5 6.8V3.5h3.3zM8.5 5.2v3.3H5.2z" fill="#1d6f24" />
               </svg>
             </button>
           </div>
-          <span className="mac-window-title">{app.name}</span>
+          <span className="mac-window-title">{appName(app)}</span>
           <span className="titlebar-spacer" />
         </div>
         <div className="mac-window-body">

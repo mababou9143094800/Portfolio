@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { DOCK_APPS as APPS } from '../../apps/registry.jsx'
-import { profile } from '../../content.js'
+import { useLang } from '../../i18n.jsx'
 import './ios.css'
 
 function useClock() {
@@ -13,14 +13,20 @@ function useClock() {
   return now
 }
 
-const timeFmt = new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', minute: '2-digit' })
-
 // Sur mobile, le bureau macOS devient un écran d'accueil iOS :
-// widget de présentation + les 4 mêmes apps.
+// widget de présentation + les mêmes apps que le Dock.
 export default function IOSHome() {
+  const { t, profile, appName } = useLang()
   const [openedId, setOpenedId] = useState(null)
   const now = useClock()
   const opened = APPS.find((a) => a.id === openedId)
+  const timeFmt = new Intl.DateTimeFormat(t.locale, { hour: '2-digit', minute: '2-digit' })
+
+  // App lien externe (GitHub, LinkedIn…) : nouvel onglet, pas d'écran
+  const launch = (app) => {
+    if (app.href) window.open(app.href, '_blank', 'noopener,noreferrer')
+    else setOpenedId(app.id)
+  }
 
   return (
     <div className="ios">
@@ -58,7 +64,7 @@ export default function IOSHome() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
-        <p className="ios-widget-hello">Bonjour 👋 je suis</p>
+        <p className="ios-widget-hello">{t.ios.hello}</p>
         <h1>
           {profile.firstName} {profile.lastName}
         </h1>
@@ -72,7 +78,7 @@ export default function IOSHome() {
           <motion.button
             key={app.id}
             className="ios-app"
-            onClick={() => setOpenedId(app.id)}
+            onClick={() => launch(app)}
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3 + i * 0.07, type: 'spring', stiffness: 300, damping: 20 }}
@@ -81,12 +87,12 @@ export default function IOSHome() {
             <span className="ios-app-icon">
               <app.icon />
             </span>
-            <span className="ios-app-label">{app.name}</span>
+            <span className="ios-app-label">{appName(app)}</span>
           </motion.button>
         ))}
       </div>
 
-      <p className="ios-hint">Touchez une app pour l’ouvrir</p>
+      <p className="ios-hint">{t.ios.hint}</p>
 
       {/* Dock */}
       <motion.div
@@ -96,7 +102,7 @@ export default function IOSHome() {
         transition={{ delay: 0.5, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       >
         {APPS.map((app) => (
-          <button key={app.id} className="ios-dock-icon" onClick={() => setOpenedId(app.id)}>
+          <button key={app.id} className="ios-dock-icon" onClick={() => launch(app)}>
             <app.icon />
           </button>
         ))}
@@ -114,9 +120,9 @@ export default function IOSHome() {
           >
             <div className="ios-app-header">
               <button className="ios-back" onClick={() => setOpenedId(null)}>
-                ‹ Accueil
+                {t.ios.back}
               </button>
-              <span className="ios-app-title">{opened.name}</span>
+              <span className="ios-app-title">{appName(opened)}</span>
               <span className="ios-header-spacer" />
             </div>
             <div className="ios-app-content">

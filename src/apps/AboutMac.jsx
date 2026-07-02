@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion'
-import { profile } from '../content.js'
+import { useLang } from '../i18n.jsx'
 import './apps.css'
 
 // « À propos de ce Mac », version portfolio.
 export default function AboutMac() {
+  const { t, profile } = useLang()
   return (
     <div className="about">
       <motion.div
@@ -19,13 +20,13 @@ export default function AboutMac() {
       </h2>
       <p className="about-role">{profile.role}</p>
       <div className="about-specs">
-        <div><span>Localisation</span>{profile.location}</div>
-        <div><span>Spécialité</span>Web full-stack</div>
-        <div><span>Site</span>Fait main — React + Framer Motion</div>
-        <div><span>Version</span>Portfolio 1.0 « Sequoia »</div>
+        <div><span>{t.about.location}</span>{profile.location}</div>
+        <div><span>{t.about.specialty}</span>{t.about.specialtyValue}</div>
+        <div><span>{t.about.site}</span>{t.about.siteValue}</div>
+        <div><span>{t.about.version}</span>{t.about.versionValue}</div>
       </div>
       <a className="about-btn" href={`mailto:${profile.email}`}>
-        Me contacter…
+        {t.about.contact}
       </a>
     </div>
   )
