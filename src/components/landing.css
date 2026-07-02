@@ -24,9 +24,15 @@
 .hero {
   position: absolute;
   z-index: 2;
-  top: 50%;
+  /* Centrage vertical par flex : Framer Motion écrase la propriété
+     transform, donc pas de translateY(-50%) possible ici. */
+  top: 0;
+  bottom: 0;
   left: clamp(3rem, 7vw, 8rem);
-  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
   max-width: 34rem;
 }
 

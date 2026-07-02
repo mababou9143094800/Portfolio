@@ -25,7 +25,7 @@ export default function LandingZoom() {
   // Bureau : de vignette à droite → plein écran centré
   const scale = useTransform(progress, [0, 1], [0.34, 1])
   const x = useTransform(progress, [0, 1], ['29%', '0%'])
-  const y = useTransform(progress, [0, 1], ['4%', '0%'])
+  const y = useTransform(progress, [0, 1], ['0%', '0%'])
   const radius = useTransform(progress, [0, 0.9, 1], [40, 24, 0])
   const frameOpacity = useTransform(progress, [0.85, 1], [1, 0])
 
