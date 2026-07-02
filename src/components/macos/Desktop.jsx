@@ -85,8 +85,9 @@ function DesktopInner({ interactive, onExitRequest }) {
   }, [interactive])
 
   // ── Menu contextuel (clic droit) ──────────────────────────────────
+  // Pas besoin de tester `interactive` : tant que le zoom n'est pas
+  // terminé, le cadre du bureau a pointer-events: none.
   const onContextMenu = (e) => {
-    if (!interactive) return
     e.preventDefault()
     const iconEl = e.target.closest('.desktop-icon')
     const chrome = e.target.closest('.mac-window, .mac-dock-wrapper, .mac-menubar, .spotlight')
