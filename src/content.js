@@ -132,43 +132,63 @@ export const projectsBase = [
 
 export const pillarsBase = [
   {
-    id: 'curiosite',
-    icon: '🔭',
+    id: 'chine',
+    icon: '🌏',
+    color: '#e74c5b',
+    company: { fr: 'Université partenaire · Efrei', en: 'Partner university · Efrei' },
+    period: { fr: '4 mois', en: '4 months' },
+    title: { fr: "Semestre d'étude en Chine", en: 'Study Abroad — China' },
+    text: {
+      fr: "Immersion académique et culturelle complète pendant 4 mois dans un environnement international, renforçant mon adaptabilité et mon ouverture d'esprit.",
+      en: 'Full academic and cultural immersion for 4 months in an international environment, strengthening my adaptability and open-mindedness.',
+    },
+  },
+  {
+    id: 'samsonite',
+    icon: '💼',
     color: '#4a90d9',
-    title: { fr: 'Curiosité', en: 'Curiosity' },
+    company: { fr: 'Samsonite · Paris', en: 'Samsonite · Paris' },
+    period: { fr: '1 mois', en: '1 month' },
+    title: { fr: 'Stage — Vente haut de gamme', en: 'Internship — High-end Sales' },
     text: {
-      fr: "J'explore sans cesse de nouvelles technologies et de nouveaux paradigmes. Chaque projet est une occasion d'apprendre quelque chose que je ne savais pas la veille.",
-      en: "I constantly explore new technologies and paradigms. Every project is a chance to learn something I didn't know the day before.",
+      fr: "Stage au Boulevard des Capucines. Vente destinée à une clientèle haut de gamme, approfondissement de la compréhension des besoins client.",
+      en: 'Internship on Boulevard des Capucines. High-end retail sales, deepened understanding of customer needs and expectations.',
     },
   },
   {
-    id: 'rigueur',
-    icon: '📐',
-    color: '#8e6fd8',
-    title: { fr: 'Rigueur', en: 'Rigor' },
-    text: {
-      fr: "Un code propre, testé et documenté n'est pas une option. Je crois qu'un travail bien fait se voit dans les détails que personne ne remarque.",
-      en: 'Clean, tested and documented code is not optional. I believe good work shows in the details nobody notices.',
-    },
-  },
-  {
-    id: 'creativite',
-    icon: '💡',
-    color: '#e8944a',
-    title: { fr: 'Créativité', en: 'Creativity' },
-    text: {
-      fr: "La technique au service de l'idée. J'aime trouver des solutions inattendues et concevoir des interfaces qui surprennent et enchantent.",
-      en: 'Technique in service of the idea. I love finding unexpected solutions and designing interfaces that surprise and delight.',
-    },
-  },
-  {
-    id: 'partage',
-    icon: '🤝',
+    id: 'credit-agricole',
+    icon: '🏦',
     color: '#4ab87a',
-    title: { fr: 'Partage', en: 'Sharing' },
+    company: { fr: 'Crédit Agricole', en: 'Crédit Agricole' },
+    period: { fr: '1 mois · Été', en: '1 month · Summer' },
+    title: { fr: 'Auxiliaire d\'été', en: 'Summer Auxiliary' },
     text: {
-      fr: "Le savoir n'a de valeur que s'il circule. Mentorat, open source, documentation : je m'investis pour que l'équipe grandisse avec moi.",
-      en: 'Knowledge only has value if it circulates. Mentoring, open source, documentation: I invest myself so the team grows with me.',
+      fr: "Tri des archives et migration de données d'un logiciel à un autre dans un environnement bancaire professionnel.",
+      en: 'Archive sorting and data migration between software systems in a professional banking environment.',
+    },
+  },
+  {
+    id: 'mgs',
+    icon: '🚐',
+    color: '#8e6fd8',
+    company: { fr: 'MGS Services', en: 'MGS Services' },
+    period: { fr: '1 mois · CDD', en: '1 month · Fixed-term' },
+    title: { fr: 'Agent de propreté', en: 'Cleaning Agent' },
+    text: {
+      fr: "Entretien de résidences et d'entreprises avec déplacements autonomes en camionnette fournie par l'employeur.",
+      en: 'Maintenance of residences and businesses with autonomous travel using a company-provided van.',
+    },
+  },
+  {
+    id: 'technip',
+    icon: '⚙️',
+    color: '#e8944a',
+    company: { fr: 'Technip Energies', en: 'Technip Energies' },
+    period: { fr: '1 semaine · 3ème', en: '1 week · Middle school' },
+    title: { fr: "Stage d'observation", en: 'Observation Internship' },
+    text: {
+      fr: "Découverte du monde de l'entreprise dans un grand groupe international du secteur de l'énergie et de la pétrochimie.",
+      en: 'Discovery of the corporate world within a major international group in the energy and petrochemical sector.',
     },
   },
 ]

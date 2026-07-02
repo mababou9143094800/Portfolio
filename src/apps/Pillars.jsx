@@ -2,7 +2,6 @@ import { motion } from 'framer-motion'
 import { useLang } from '../i18n.jsx'
 import './apps.css'
 
-// Mes 4 piliers : grille 2×2 de cartes animées.
 export default function Pillars() {
   const { t, pillars } = useLang()
   return (
@@ -23,13 +22,16 @@ export default function Pillars() {
             style={{ '--pillar-color': p.color }}
             initial={{ opacity: 0, y: 28, scale: 0.94 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ delay: 0.12 + i * 0.1, type: 'spring', stiffness: 260, damping: 22 }}
-            whileHover={{ y: -6, scale: 1.02 }}
+            transition={{ delay: 0.12 + i * 0.08, type: 'spring', stiffness: 260, damping: 22 }}
+            whileHover={{ y: -4, scale: 1.015 }}
           >
-            <span className="pillar-icon">{p.icon}</span>
+            <div className="pillar-card-top">
+              <span className="pillar-icon">{p.icon}</span>
+              <span className="pillar-index">0{i + 1}</span>
+            </div>
             <h3>{p.title}</h3>
+            <p className="pillar-meta">{p.company} · {p.period}</p>
             <p>{p.text}</p>
-            <span className="pillar-index">0{i + 1}</span>
           </motion.article>
         ))}
       </div>

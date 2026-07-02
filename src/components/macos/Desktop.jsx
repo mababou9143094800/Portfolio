@@ -7,7 +7,7 @@ import Dock from './Dock.jsx'
 import MacWindow from './Window.jsx'
 import MenuList from './MenuList.jsx'
 import Spotlight from './Spotlight.jsx'
-import { FileIcon, FolderIcon } from './icons.jsx'
+import { FileIcon, FolderIcon, GlobeIcon } from './icons.jsx'
 import { APPS } from '../../apps/registry.jsx'
 import { useLang } from '../../i18n.jsx'
 import './macos.css'
@@ -32,7 +32,7 @@ function DesktopInner({ interactive, onExitRequest }) {
   const desktopRef = useRef(null)
   const wm = useWindowManager()
   const { windows, anyOpen, anyVisible, focusedId } = wm
-  const { t, profile, appName } = useLang()
+  const { t, profile, appName, lang, setLang } = useLang()
 
   const [wallpaper, setWallpaper] = useState(0)
   const [spotlightOpen, setSpotlightOpen] = useState(false)
@@ -171,7 +171,7 @@ function DesktopInner({ interactive, onExitRequest }) {
           openSpotlight={() => setSpotlightOpen(true)}
         />
 
-        {/* Icônes du bureau (CV + dossiers créés) */}
+        {/* Icônes du bureau (CV + dossiers créés + bascule de langue) */}
         <div className="desktop-icons">
           {desktopItems.map((item) => (
             <DesktopIcon
@@ -189,6 +189,20 @@ function DesktopInner({ interactive, onExitRequest }) {
               }}
             />
           ))}
+          <motion.div
+            className="desktop-icon"
+            style={{ cursor: 'pointer' }}
+            onDoubleClick={() => setLang(lang === 'fr' ? 'en' : 'fr')}
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: 'spring', stiffness: 320, damping: 22, delay: 0.1 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.88 }}
+            title={t.desktop.switchLang}
+          >
+            <span className="desktop-icon-img"><GlobeIcon /></span>
+            <span className="desktop-icon-label">{t.desktop.switchLang}</span>
+          </motion.div>
         </div>
 
         {/* Indication au premier affichage */}

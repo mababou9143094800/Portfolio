@@ -191,6 +191,19 @@ export function LinkedInIcon() {
   )
 }
 
+// ── Globe (langue) ───────────────────────────────────────────────────
+export function GlobeIcon() {
+  return (
+    <IconBase id="globe" gradient={[['0', '#5e9ef5'], ['1', '#1a56db']]}>
+      <circle cx="48" cy="48" r="28" fill="none" stroke="#fff" strokeWidth="5" />
+      <ellipse cx="48" cy="48" rx="14" ry="28" fill="none" stroke="#fff" strokeWidth="4" />
+      <line x1="20" y1="48" x2="76" y2="48" stroke="#fff" strokeWidth="4" />
+      <line x1="22" y1="33" x2="74" y2="33" stroke="#fff" strokeWidth="3.5" />
+      <line x1="22" y1="63" x2="74" y2="63" stroke="#fff" strokeWidth="3.5" />
+    </IconBase>
+  )
+}
+
 // ── Snake ────────────────────────────────────────────────────────────
 export function SnakeIcon() {
   return (

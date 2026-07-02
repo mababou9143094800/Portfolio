@@ -11,7 +11,7 @@ const STRINGS = {
     apps: {
       projects: 'Mes Projets',
       contact: 'Me Contacter',
-      pillars: 'Mes 4 Piliers',
+      pillars: 'Mes Expériences',
       snake: 'Snake',
       about: 'À propos',
       cv: 'CV — Aperçu',
@@ -38,6 +38,7 @@ const STRINGS = {
       changeWallpaper: 'Changer le fond d’écran',
       cleanUp: 'Ranger le bureau',
       untitledFolder: 'Dossier sans titre',
+      switchLang: 'Switch to English',
     },
     menubar: {
       titles: { file: 'Fichier', edit: 'Édition', view: 'Présentation', window: 'Fenêtre', help: 'Aide' },
@@ -123,7 +124,7 @@ const STRINGS = {
       versionValue: 'Portfolio 1.0 « Sequoia »',
       contact: 'Me contacter…',
     },
-    pillarsApp: { intro: 'Quatre valeurs guident chacun de mes projets.' },
+    pillarsApp: { intro: 'Mes expériences professionnelles et académiques.' },
     snake: {
       score: 'Score',
       best: 'Record',
@@ -155,7 +156,7 @@ const STRINGS = {
     apps: {
       projects: 'My Projects',
       contact: 'Contact Me',
-      pillars: 'My 4 Pillars',
+      pillars: 'My Experiences',
       snake: 'Snake',
       about: 'About',
       cv: 'CV — Preview',
@@ -182,6 +183,7 @@ const STRINGS = {
       changeWallpaper: 'Change Wallpaper',
       cleanUp: 'Clean Up Desktop',
       untitledFolder: 'Untitled Folder',
+      switchLang: 'Switch to French',
     },
     menubar: {
       titles: { file: 'File', edit: 'Edit', view: 'View', window: 'Window', help: 'Help' },
@@ -267,7 +269,7 @@ const STRINGS = {
       versionValue: 'Portfolio 1.0 “Sequoia”',
       contact: 'Contact me…',
     },
-    pillarsApp: { intro: 'Four values guide every one of my projects.' },
+    pillarsApp: { intro: 'My professional and academic experiences.' },
     snake: {
       score: 'Score',
       best: 'Best',
@@ -312,7 +314,13 @@ export function LangProvider({ children }) {
     const t = STRINGS[lang]
     const profile = { ...profileBase, ...profileI18n[lang] }
     const projects = projectsBase.map((p) => ({ ...p, description: p.description[lang] }))
-    const pillars = pillarsBase.map((p) => ({ ...p, title: p.title[lang], text: p.text[lang] }))
+    const pillars = pillarsBase.map((p) => ({
+      ...p,
+      title: p.title[lang],
+      text: p.text[lang],
+      company: p.company[lang],
+      period: p.period[lang],
+    }))
     const setLang = (l) => {
       localStorage.setItem('lang', l)
       setLangState(l)
