@@ -119,7 +119,7 @@ const STRINGS = {
       specialty: 'Spécialité',
       specialtyValue: 'Réseaux & cybersécurité',
       site: 'Site',
-      siteValue: 'Fait main — React + Framer Motion',
+      siteValue: 'Fait main + CLaude — React + Framer Motion',
       version: 'Version',
       versionValue: 'Portfolio 1.0 « Sequoia »',
       contact: 'Me contacter…',
